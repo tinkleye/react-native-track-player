@@ -418,6 +418,12 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
         waitForConnection(() -> callback.resolve(binder.getPlayback().getVolume()));
     }
 
+    // 【车机改造】暴露音频会话 ID，供均衡器等音频特效挂载使用
+    @ReactMethod
+    public void getAudioSessionId(final Promise callback) {
+        waitForConnection(() -> callback.resolve(binder.getPlayback().getAudioSessionId()));
+    }
+
     @ReactMethod
     public void setRate(final float rate, final Promise callback) {
         waitForConnection(() -> {

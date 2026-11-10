@@ -232,6 +232,12 @@ public class LocalPlayback extends ExoPlayback<ExoPlayer> {
         return player.getVolume();
     }
 
+    // 【车机改造】暴露音频会话 ID，供均衡器等音频特效挂载使用
+    @Override
+    public int getAudioSessionId() {
+        return player.getAudioSessionId();
+    }
+
     @Override
     public void setPlayerVolume(float volume) {
         player.setVolume(volume);

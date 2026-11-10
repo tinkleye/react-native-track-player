@@ -87,6 +87,10 @@ dependencies {
         compileOnly "androidx.media3:media3-exoplayer-smoothstreaming:${media3Version}"
     }
 
+    // 【车机改造】Jellyfin 维护的 FFmpeg 解码器扩展（预编译，含 APE/DSD/WavPack/TTA 等）
+    // https://central.sonatype.com/artifact/org.jellyfin.media3/media3-ffmpeg-decoder
+    implementation "org.jellyfin.media3:media3-ffmpeg-decoder:${media3Version}+1"
+
     // Make sure we're using androidx
     implementation "androidx.core:core:1.16.0"
     implementation "androidx.media:media:1.7.0"

@@ -24,16 +24,23 @@ import android.util.Log;
 import androidx.media3.common.C;
 import androidx.media3.common.TrackSelectionParameters;
 import androidx.media3.common.util.UnstableApi;
+import androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
+import androidx.media3.exoplayer.Renderer;
+import androidx.media3.exoplayer.audio.AudioRendererEventListener;
+import androidx.media3.exoplayer.audio.AudioSink;
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
 
 import com.guichaguri.trackplayer.module.MusicEvents;
 import com.guichaguri.trackplayer.service.metadata.MetadataManager;
 import com.guichaguri.trackplayer.service.models.Track;
 import com.guichaguri.trackplayer.service.player.ExoPlayback;
 import com.guichaguri.trackplayer.service.player.LocalPlayback;
+
+import java.util.ArrayList;
 
 /**
  * @author Guichaguri
@@ -136,7 +143,18 @@ public class MusicManager {
                 .setBackBuffer(backBuffer, false)
                 .build();
 
-        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(service);
+        // 【车机改造】在默认渲染器基础上追加 FFmpeg 音频解码器（APE/DSD/WavPack/TTA 等），
+        // MediaCodec 原生支持的格式（FLAC/WAV/MP3/M4A）仍走系统硬解，FFmpeg 仅作兜底
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(service) {
+            @Override
+            protected void buildAudioRenderers(Context context, int extensionRendererMode,
+                MediaCodecSelector mediaCodecSelector, boolean enableDecoderFallback, AudioSink audioSink,
+                Handler eventHandler, AudioRendererEventListener eventListener, ArrayList<Renderer> out) {
+                super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector,
+                    enableDecoderFallback, audioSink, eventHandler, eventListener, out);
+                out.add(new FfmpegAudioRenderer());
+            }
+        };
 
         ExoPlayer player = new ExoPlayer.Builder(service, renderersFactory)
                 .setLoadControl(control)

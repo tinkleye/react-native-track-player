@@ -235,6 +235,11 @@ public abstract class ExoPlayback<T extends Player> implements Player.Listener, 
 
     public abstract void setPlayerVolume(float volume);
 
+    // 【车机改造】暴露音频会话 ID，供均衡器等音频特效挂载使用
+    public int getAudioSessionId() {
+        return -1;
+    }
+
     public float getRate() {
         return player.getPlaybackParameters().speed;
     }

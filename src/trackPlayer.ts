@@ -202,6 +202,15 @@ async function getVolume(): Promise<number> {
   return TrackPlayer.getVolume()
 }
 
+// 【车机改造】获取音频会话 ID，供均衡器等音频特效挂载使用（仅 Android 支持）
+async function getAudioSessionId(): Promise<number> {
+  try {
+    return await TrackPlayer.getAudioSessionId()
+  } catch {
+    return -1
+  }
+}
+
 async function getRate(): Promise<number> {
   if (!isSetupedPlayer) return Promise.resolve(0)
   return TrackPlayer.getRate()
@@ -296,6 +305,7 @@ export default {
 
   // MARK: - Getters
   getVolume,
+  getAudioSessionId,
   getRate,
   getTrack,
   getQueue,
